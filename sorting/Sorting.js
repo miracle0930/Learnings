@@ -213,7 +213,7 @@ const heapSort = (input) => {
   checkResult(arr, 'Heap sort', start, end);
 }
 
-const radixSort = (input) => {
+const countingSort = (input) => {
   const start = performance.now();
   const arr = input.slice(0);
   const buckets = [];
@@ -237,7 +237,7 @@ const radixSort = (input) => {
   }
 
   const end = performance.now();
-  checkResult(arr, 'Radix sort', start, end);
+  checkResult(arr, 'Counting sort', start, end);
 }
 
 
@@ -247,4 +247,4 @@ const radixSort = (input) => {
 // quickSort(data);
 // mergeSort(data);
 heapSort(data);
-radixSort(data);
+countingSort(data);
