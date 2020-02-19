@@ -1,7 +1,9 @@
 const performance = require('perf_hooks').performance;
 
-let length = 10;
-const data = Array.from({ length }, () => Math.floor(Math.random() * length));
+let length = 10000;
+let seedLength = 1000000;
+
+const data = Array.from({ length }, () => Math.floor(Math.random() * seedLength));
 const answer = data.slice(0).sort((a, b) => a - b);
 
 const checkResult = (input, sortMethod, start, end) => {
@@ -125,49 +127,47 @@ const quickSort = (input) => {
 const mergeSort = (input) => {
   const start = performance.now();
   const arr = input.slice(0);
-  const temp = [];
+  const recorder = [];
+
   const sort = (left, right) => {
-    if (right - left + 1 <= 1) {
-      return;
+    if (left < right) {
+      let mid = parseInt(left + (right - left) / 2);
+      sort(left, mid);
+      sort(mid + 1, right);
+      merge(left, mid, right);
     }
-    let mid = left + (right - left) / 2;
-    sort(arr, temp, left, mid);
-    sort(arr, temp, mid + 1, right);
-    merge(arr, temp, left, mid, right);
   }
 
   const merge = (left, mid, right) => {
+    
     let i = left;
-    let j = mid;
-    let t = 0;
-    while (i < mid && mid < right) {
-      if (arr[i] <= arr[j]) {
-        temp[t] = arr[i];
-        i += 1;
-        t += 1;
+    let j = mid + 1;
+    let recorderIndex = 0;
+    while (i <= mid && j <= right) {
+      if (arr[i] < arr[j]) {
+        recorder[recorderIndex++] = arr[i++];
       } else {
-        temp[t] = arr[j];
-        j += 1;
-        t += 1;
+        recorder[recorderIndex++] = arr[j++];
       }
     }
-    while (i < mid) {
-      temp[i] = arr[i];
+
+    while (i <= mid) {
+      recorder[recorderIndex++] = arr[i++];
+    }
+
+    while (j <= right) {
+      recorder[recorderIndex++] = arr[j++];
+    }
+
+    i = left;
+
+    while (i <= right) {
+      arr[i] = recorder[i-left];
       i += 1;
-      t += 1;
     }
-    while (j < right) {
-      temp[j] = arr[j];
-      j += 1;
-      t += 1;
-    }
-    t = 0;
-    while (left < right) {
-      arr[left] = temp[t];
-      left += 1;
-      t += 1;
-    }
+    
   }
+
   sort(0, arr.length - 1);
   const end = performance.now();
   checkResult(arr, 'Merge sort', start, end);
@@ -177,5 +177,5 @@ const mergeSort = (input) => {
 // selectionSort(data);
 // bubbleSort(data);
 // insertionSort(data);
-// quickSort(data);
+quickSort(data);
 mergeSort(data);
